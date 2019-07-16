@@ -7,14 +7,16 @@ var keys = require("./keys.js");
 var fs = require("fs");
 
 // BandsInTown API Key
-var bandsintown = keys.bandsintown;
+var bandsintown = keys.bandsintown.secret;
 // OMDB API Key
-var omdb = keys.omdb;
+var omdb = keys.omdb.secret;
 // Spotify API Key
 var spotify = new Spotify(keys.spotify);
 
+// Console Command that triggers the different functions
 var command = process.argv[2];
 
+// Function that prints out the given artist's upcomming concert dates and their venue locations and name
 function concertThis(artist) {
     axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + bandsintown)
     .then(function (response) {
@@ -52,33 +54,67 @@ function spotifyThisSong(song) {
 
     spotify.search({ type: 'track', query: song, limit: 5 })
     .then(function(response) {
-        console.log("---------------------------------------------------------------------------\n")
-        for (var i = 0; i < response.tracks.items.length; i++) {
-            console.log("Result #" + (i + 1) + "\n");
-            console.log("Song: " + response.tracks.items[i].name)
-            var artists = "Artist: ";
-            for (var j = 0; j < response.tracks.items[i].artists.length; j++ ) {
-                if (j === response.tracks.items[i].artists.length - 1) {
-                    artists += response.tracks.items[i].artists[j].name;
-                } else {
-                    artists += response.tracks.items[i].artists[j].name + " & ";
+        if (response.tracks.items.length > 0) {
+            console.log("---------------------------------------------------------------------------\n")
+            for (var i = 0; i < response.tracks.items.length; i++) {
+                console.log("Result #" + (i + 1) + "\n");
+                console.log("Song: " + response.tracks.items[i].name)
+                var artists = "Artist: ";
+                for (var j = 0; j < response.tracks.items[i].artists.length; j++ ) {
+                    if (j === response.tracks.items[i].artists.length - 1) {
+                        artists += response.tracks.items[i].artists[j].name;
+                    } else {
+                        artists += response.tracks.items[i].artists[j].name + " & ";
+                    }
                 }
-            }
-            console.log(artists);
-            console.log("Album: " + response.tracks.items[i].album.name);
-            console.log("Preview: " + response.tracks.items[0].external_urls.spotify)
-            if (i === response.tracks.items.length - 1) {
-                console.log("\n---------------------------------------------------------------------------") 
-            } else {
-                console.log("\n---------------------------------------------------------------------------\n")
-            }
-        };
+                console.log(artists);
+                console.log("Album: " + response.tracks.items[i].album.name);
+                console.log("Preview: " + response.tracks.items[0].external_urls.spotify)
+                if (i === response.tracks.items.length - 1) {
+                    console.log("\n---------------------------------------------------------------------------") 
+                } else {
+                    console.log("\n---------------------------------------------------------------------------\n")
+                }
+            };
+        } else {
+            console.log("---------------------------------------------------------------------------\n")
+            console.log("Sorry, no tracks found for '" + song +"'");
+            console.log("\n---------------------------------------------------------------------------")
+        }
     }).catch(function(err) {
         console.log("---------------------------------------------------------------------------\n")
         console.log("Sorry, an error has occured. Please try again later.");
         console.log("\n---------------------------------------------------------------------------")
     });
 };
+
+function movieThis(movie) {
+    axios.get("http://www.omdbapi.com/?t=" + movie + "&plot=short&apikey=trilogy")
+    .then(function (response) {
+        if (response.data.Response === "True") {
+            console.log("---------------------------------------------------------------------------\n")
+            console.log("Title: " + response.data.Title);
+            console.log("Released Year: " + response.data.Year);
+            console.log("IMDB Rating: " + response.data.Ratings[0].Value);
+            console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
+            console.log("Country: " + response.data.Country);
+            console.log("Languages: " + response.data.Language);
+            console.log("Actors: " + response.data.Actors);
+            console.log("Plot: " + response.data.Plot);
+            console.log("\n---------------------------------------------------------------------------") 
+
+        } else {
+            console.log("---------------------------------------------------------------------------\n")
+            console.log("Sorry, no movie title found for '" + movie +"'");
+            console.log("\n---------------------------------------------------------------------------")
+        }
+        
+    }).catch(function (error) {
+        console.log("---------------------------------------------------------------------------\n")
+        console.log("Sorry, an error has occured. Please try again later.");
+        console.log("\n---------------------------------------------------------------------------")
+    })
+}
 
 switch(command) {
     case "concert-this":
@@ -136,10 +172,14 @@ switch(command) {
     case "movie-this":
         var movie = "";
         for (var i = 3; i < process.argv.length; i++) {
-            movie += process.argv[i];
+            if (i === process.argv.length - 1) {
+                movie += process.argv[i];
+            } else {
+                movie += process.argv[i] + " ";
+            }
         }
         if (movie) {
-            console.log(movie);
+            movieThis(movie);
         } else {
             console.log("+-------------------------------------------------------------------------+")
             console.log("|                                                                         |")
