@@ -193,6 +193,15 @@ switch(command) {
         }
         break;
     case "do-what-it-says":
+        fs.readFile("random.txt", "utf8", function(error, data) {
+            if (error) {
+                return console.log(error);
+            }
+            var fileArr = data.split(",");
+            if (fileArr[0] === "spotify-this-song") {
+                spotifyThisSong(fileArr[1]);
+            } 
+        });
         break;
     default:
         console.log("+-------------------------------------------------------------------------+")
