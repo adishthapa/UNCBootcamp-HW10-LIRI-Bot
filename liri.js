@@ -16,6 +16,25 @@ var spotify = new Spotify(keys.spotify);
 // Console Command that triggers the different functions
 var command = process.argv[2];
 
+// Writes the Console Command to log.txt
+fs.appendFile("log.txt",command, function(err) {
+    if (err) {
+        console.log("Error: " + err);
+    };
+});
+
+// Function that parses process.argv for search terms and then logs it and returns it
+function processCommand() {
+    var searchCommand = process.argv.slice(3).join(" ");
+    var logCommand = " " + searchCommand + "\n";
+    fs.appendFile("log.txt",logCommand, function(err) {
+        if (err) {
+            console.log("Error: " + err);
+        };
+    });
+    return searchCommand;
+};
+
 // Function that prints out the given artist's upcomming concert dates and their venue locations and name
 function concertThis(artist) {
     axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + bandsintown)
@@ -35,59 +54,21 @@ function concertThis(artist) {
                     console.log("\n---------------------------------------------------------------------------") 
                 } else {
                     console.log("\n---------------------------------------------------------------------------\n")
-                }
-            }
+                };
+            };
         } else {
             console.log("---------------------------------------------------------------------------\n")
             console.log("Sorry, no upcomming events found for '" + artist +"'");
             console.log("\n---------------------------------------------------------------------------")
-        }
-        
+        };   
     }).catch(function (error) {
-        console.log("---------------------------------------------------------------------------\n")
-        console.log("Sorry, an error has occured. Please try again later.");
-        console.log("\n---------------------------------------------------------------------------")
-    })
-};
-
-function spotifyThisSong(song) {
-
-    spotify.search({ type: 'track', query: song, limit: 5 })
-    .then(function(response) {
-        if (response.tracks.items.length > 0) {
-            console.log("---------------------------------------------------------------------------\n")
-            for (var i = 0; i < response.tracks.items.length; i++) {
-                console.log("Result #" + (i + 1) + "\n");
-                console.log("Song: " + response.tracks.items[i].name)
-                var artists = "Artist: ";
-                for (var j = 0; j < response.tracks.items[i].artists.length; j++ ) {
-                    if (j === response.tracks.items[i].artists.length - 1) {
-                        artists += response.tracks.items[i].artists[j].name;
-                    } else {
-                        artists += response.tracks.items[i].artists[j].name + " & ";
-                    }
-                }
-                console.log(artists);
-                console.log("Album: " + response.tracks.items[i].album.name);
-                console.log("Preview: " + response.tracks.items[0].external_urls.spotify)
-                if (i === response.tracks.items.length - 1) {
-                    console.log("\n---------------------------------------------------------------------------") 
-                } else {
-                    console.log("\n---------------------------------------------------------------------------\n")
-                }
-            };
-        } else {
-            console.log("---------------------------------------------------------------------------\n")
-            console.log("Sorry, no tracks found for '" + song +"'");
-            console.log("\n---------------------------------------------------------------------------")
-        }
-    }).catch(function(err) {
         console.log("---------------------------------------------------------------------------\n")
         console.log("Sorry, an error has occured. Please try again later.");
         console.log("\n---------------------------------------------------------------------------")
     });
 };
 
+// Function that prints out the given movie's title, release year, imdb rating, rotten tomatoes rating, country, languages, actors, and plot
 function movieThis(movie) {
     axios.get("http://www.omdbapi.com/?t=" + movie + "&plot=short&apikey=trilogy")
     .then(function (response) {
@@ -107,25 +88,55 @@ function movieThis(movie) {
             console.log("---------------------------------------------------------------------------\n")
             console.log("Sorry, no movie title found for '" + movie +"'");
             console.log("\n---------------------------------------------------------------------------")
-        }
-        
+        };
     }).catch(function (error) {
         console.log("---------------------------------------------------------------------------\n")
         console.log("Sorry, an error has occured. Please try again later.");
         console.log("\n---------------------------------------------------------------------------")
-    })
-}
+    });
+};
+
+// Function that prints out the given song's name, artists, album, and a preview of the song
+function spotifyThisSong(song) {
+    spotify.search({ type: 'track', query: song, limit: 5 })
+    .then(function(response) {
+        if (response.tracks.items.length > 0) {
+            console.log("---------------------------------------------------------------------------\n")
+            for (var i = 0; i < response.tracks.items.length; i++) {
+                console.log("Result #" + (i + 1) + "\n");
+                console.log("Song: " + response.tracks.items[i].name)
+                var artists = "Artist: ";
+                for (var j = 0; j < response.tracks.items[i].artists.length; j++ ) {
+                    if (j === response.tracks.items[i].artists.length - 1) {
+                        artists += response.tracks.items[i].artists[j].name;
+                    } else {
+                        artists += response.tracks.items[i].artists[j].name + " & ";
+                    };
+                };
+                console.log(artists);
+                console.log("Album: " + response.tracks.items[i].album.name);
+                console.log("Preview: " + response.tracks.items[0].external_urls.spotify)
+                if (i === response.tracks.items.length - 1) {
+                    console.log("\n---------------------------------------------------------------------------") 
+                } else {
+                    console.log("\n---------------------------------------------------------------------------\n")
+                };
+            };
+        } else {
+            console.log("---------------------------------------------------------------------------\n")
+            console.log("Sorry, no tracks found for '" + song +"'");
+            console.log("\n---------------------------------------------------------------------------")
+        };
+    }).catch(function(err) {
+        console.log("---------------------------------------------------------------------------\n")
+        console.log("Sorry, an error has occured. Please try again later.");
+        console.log("\n---------------------------------------------------------------------------")
+    });
+};
 
 switch(command) {
     case "concert-this":
-        var artist = "";
-        for (var i = 3; i < process.argv.length; i++) {
-            if (i === process.argv.length - 1) {
-                artist += process.argv[i];
-            } else {
-                artist += process.argv[i] + " ";
-            }
-        }
+        var artist = processCommand();
         if (artist) {
             concertThis(artist);
         } else {
@@ -139,17 +150,10 @@ switch(command) {
             console.log("| node liri.js concert-this '<artist/band name here>'                     |");
             console.log("|                                                                         |")
             console.log("+-------------------------------------------------------------------------+")
-        }
+        };
         break;
     case "spotify-this-song":
-        var song = "";
-        for (var i = 3; i < process.argv.length; i++) {
-            if (i === process.argv.length - 1) {
-                song += process.argv[i];
-            } else {
-                song += process.argv[i] + " ";
-            }
-        }
+        var song = processCommand();
         if (song) {
             spotifyThisSong(song);
         } else {
@@ -166,21 +170,17 @@ switch(command) {
             console.log("| node liri.js spotify-this-song '<song name here>'                       |");
             console.log("|                                                                         |")
             console.log("+-------------------------------------------------------------------------+")
-
-        }
+        };
         break;
     case "movie-this":
-        var movie = "";
-        for (var i = 3; i < process.argv.length; i++) {
-            if (i === process.argv.length - 1) {
-                movie += process.argv[i];
-            } else {
-                movie += process.argv[i] + " ";
-            }
-        }
+        var movie = processCommand();
         if (movie) {
             movieThis(movie);
         } else {
+            // The direction says to show default movie called "Mr. Nobody" if nothing is provided like this:
+            // movieThis("Mr. Nobody");
+            // However, I think the following output looks much better for User Friendliness:
+
             console.log("+-------------------------------------------------------------------------+")
             console.log("|                                                                         |")
             console.log("| Please make sure to enter the name of a Movie after the command.        |")
@@ -190,17 +190,18 @@ switch(command) {
             console.log("| node liri.js movie-this '<movie name here>'                             |");
             console.log("|                                                                         |")
             console.log("+-------------------------------------------------------------------------+")
-        }
+        };
         break;
     case "do-what-it-says":
+        processCommand();
         fs.readFile("random.txt", "utf8", function(error, data) {
             if (error) {
                 return console.log(error);
-            }
+            };
             var fileArr = data.split(",");
             if (fileArr[0] === "spotify-this-song") {
                 spotifyThisSong(fileArr[1]);
-            } 
+            };
         });
         break;
     default:
