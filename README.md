@@ -44,12 +44,18 @@ Here are the parameters that the application accepts and their outputs:
   <p align="center">
   <img src="images/liri-do-what-it-says.gif" alt="LIRI Bot do-what-it-says">
   </p>
-  * random.txt should be written like this: <br>
+<ul>
+  <ul>
+   <li>random.txt should be written like this:</li>
+   <br>
       &lt;any of the commands from above>,&lt;term to search for> <br>
       &lt;any of the commands from above>,&lt;term to search for> <br>
       ... <br>
       &lt;any of the commands from above>,&lt;term to search for> <br>
-   * Example of a random.txt: <br>
+   <br>
+   <li>Example of a random.txt:</li>
+  </ul>
+</ul>
 <p align="center">
 <img src="images/liri-random.png" alt="LIRI Bot random.txt" width="100%">
 </p>
