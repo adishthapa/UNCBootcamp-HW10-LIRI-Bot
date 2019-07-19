@@ -152,26 +152,6 @@ switch(command) {
             console.log("+-------------------------------------------------------------------------+")
         };
         break;
-    case "spotify-this-song":
-        var song = processCommand();
-        if (song) {
-            spotifyThisSong(song);
-        } else {
-            // The direction says to show default song of "The Sign" by Ace of Base if nothing is provided like this:
-            // spotifyThisSong("The Sign Ace of Base");
-            // However, I think the following output looks much better for User Friendliness:
-
-            console.log("+-------------------------------------------------------------------------+")
-            console.log("|                                                                         |")
-            console.log("| Please make sure to enter the name of a Song after the command.         |")
-            console.log("|                                                                         |")
-            console.log("| Example:                                                                |")
-            console.log("|                                                                         |")
-            console.log("| node liri.js spotify-this-song '<song name here>'                       |");
-            console.log("|                                                                         |")
-            console.log("+-------------------------------------------------------------------------+")
-        };
-        break;
     case "movie-this":
         var movie = processCommand();
         if (movie) {
@@ -192,16 +172,49 @@ switch(command) {
             console.log("+-------------------------------------------------------------------------+")
         };
         break;
+    case "spotify-this-song":
+        var song = processCommand();
+        if (song) {
+            spotifyThisSong(song);
+        } else {
+            // The direction says to show default song of "The Sign" by Ace of Base if nothing is provided like this:
+            // spotifyThisSong("The Sign Ace of Base");
+            // However, I think the following output looks much better for User Friendliness:
+
+            console.log("+-------------------------------------------------------------------------+")
+            console.log("|                                                                         |")
+            console.log("| Please make sure to enter the name of a Song after the command.         |")
+            console.log("|                                                                         |")
+            console.log("| Example:                                                                |")
+            console.log("|                                                                         |")
+            console.log("| node liri.js spotify-this-song '<song name here>'                       |");
+            console.log("|                                                                         |")
+            console.log("+-------------------------------------------------------------------------+")
+        };
+        break;
     case "do-what-it-says":
         processCommand();
         fs.readFile("random.txt", "utf8", function(error, data) {
             if (error) {
                 return console.log(error);
             };
-            var fileArr = data.split(",");
-            if (fileArr[0] === "spotify-this-song") {
-                spotifyThisSong(fileArr[1]);
-            };
+            var fileArr = data.split("\n");
+            for (var i = 0; i < fileArr.length; i++) {
+                var commandsArr = fileArr[i].split(",");
+                switch(commandsArr[0]){
+                    case "concert-this":
+                        concertThis(commandsArr[1]);
+                        break;
+                    case "movie-this":
+                        movieThis(commandsArr[1]);
+                        break;
+                    case "spotify-this-song":
+                        spotifyThisSong(commandsArr[1]);
+                        break;
+                    default:
+                        console.log("Unknown command in random.txt");
+                }
+            }
         });
         break;
     default:
@@ -212,8 +225,8 @@ switch(command) {
         console.log("| Please try one of the following commands instead:                       |");
         console.log("|                                                                         |")
         console.log("| node liri.js concert-this '<artist/band name here>'                     |");
-        console.log("| node liri.js spotify-this-song '<song name here>'                       |");
         console.log("| node liri.js movie-this '<movie name here>'                             |");
+        console.log("| node liri.js spotify-this-song '<song name here>'                       |");
         console.log("| node liri.js do-what-it-says                                            |");
         console.log("|                                                                         |")
         console.log("+-------------------------------------------------------------------------+")
