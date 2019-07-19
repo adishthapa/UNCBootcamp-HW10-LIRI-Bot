@@ -11,7 +11,9 @@ Here are the parameters that the application accepts and their outputs:
     * Location (Country, City, and Region)
     * Date
   * Example:
-  ![LIRI Bot concert-this](images/liri-concert-this.gif)
+  <p align="center">
+  <img src="images/liri-concert-this.gif" alt="LIRI Bot concert-this">
+  </p>
 * <strong>node liri.js movie-this &lt;movie name here></strong>
   * Outputs the following information for the movie:
     * Title
@@ -23,7 +25,9 @@ Here are the parameters that the application accepts and their outputs:
     * Actors
     * Plot
   * Example:
-  ![LIRI Bot movie-this](images/liri-movie-this.gif)
+  <p align="center">
+  <img src="images/liri-movie-this.gif" alt="LIRI Bot movie-this">
+  </p>
 * <strong>node liri.js spotify-this-song &lt;song name here></strong>
   * Outputs up to 5 different songs with the name and the following information for them:
     * Song's name
@@ -31,10 +35,14 @@ Here are the parameters that the application accepts and their outputs:
     * Album
     * Preview
   * Example:
-  ![LIRI Bot spotify-this-song](images/liri-spotify-this-song.gif)
+  <p align="center">
+  <img src="images/liri-spotify-this-song.gif" alt="LIRI Bot spotify-this-song">
+  </p>
 * <strong>node liri.js do-what-it-says</strong>
   * Reads data from random.txt and outputs information for them.
-  ![LIRI Bot do-what-it-says](images/liri-do-what-it-says.gif)
+  <p align="center">
+  <img src="images/liri-do-what-it-says.gif" alt="LIRI Bot do-what-it-says">
+  </p>
   * random.txt should be written like this: <br>
       &lt;any of the commands from above>,&lt;term to search for> <br>
       &lt;any of the commands from above>,&lt;term to search for> <br>
@@ -44,4 +52,4 @@ Here are the parameters that the application accepts and their outputs:
      ![LIRI Bot random.txt](images/liri-random.png)
 
 <strong>After all of the command line arguments have been run from the examples above, the log.txt file should look like this:</strong>
-![LIRI Bot log.txt](images/log.png)
+![LIRI Bot log.txt](images/liri-log.png)
