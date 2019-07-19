@@ -50,9 +50,9 @@ Here are the parameters that the application accepts and their outputs:
       ... <br>
       &lt;any of the commands from above>,&lt;term to search for> <br>
    * Example of a random.txt: <br>
-     <p align="center">
-     <img src="images/liri-random.png" alt="LIRI Bot random.txt" width="100%">
-     </p>
+<p align="center">
+<img src="images/liri-random.png" alt="LIRI Bot random.txt" width="100%">
+</p>
 
 <strong>After all of the command line arguments have been run from the examples above, the log.txt file should look like this:</strong>
 <p align="center">
