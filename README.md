@@ -1,5 +1,4 @@
-# UNCBootcamp-HW10-LIRI-Bot
-UNC Coding Bootcamp HW 10 LIRI Bot
+# LIRI Bot
 
 Language Interpretation and Recognition Interface (LIRI Bot) is a simple command line node application that takes in pre-defined parameters and gives you back data. It also logs the given command in log.txt.
 
